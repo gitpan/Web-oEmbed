@@ -1,25 +1,27 @@
---- 
-abstract: oEmbed consumer
-author: 
-  - Tatsuhiko Miyagawa <miyagawa@cpan.org>
-build_requires: 
+---
+abstract: 'oEmbed consumer'
+author:
+  - 'Tatsuhiko Miyagawa <miyagawa@cpan.org>'
+build_requires:
   Test::More: 0
 distribution_type: module
-generated_by: Module::Install version 0.68
+generated_by: 'Module::Install version 0.77'
 license: perl
-meta-spec: 
-  url: http://module-build.sourceforge.net/META-spec-v1.3.html
-  version: 1.3
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
 name: Web-oEmbed
-no_index: 
-  directory: 
+no_index:
+  directory:
     - inc
     - t
-requires: 
+requires:
   HTML::Element: 0
   JSON::XS: 0
   LWP: 0
-  Moose: 0
+  Squirrel: 0
   XML::LibXML::Simple: 0
   perl: 5.8.1
-version: 0.01
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.02

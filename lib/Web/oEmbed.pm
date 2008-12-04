@@ -2,9 +2,9 @@ package Web::oEmbed;
 
 use strict;
 use 5.8.1;
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-use Moose;
+use Squirrel;
 has 'format'    => (is => 'rw', default => 'json');
 has 'discovery' => (is => 'rw');
 has 'providers' => (is => 'rw', isa => 'ArrayRef', default => sub { [] });
@@ -75,7 +75,7 @@ sub request_url {
 sub embed {
     my($self, $uri, $opt) = @_;
 
-    my $url = $self->request_url($uri, $opt);
+    my $url = $self->request_url($uri, $opt) or return;
     my $res = $self->agent->get($url);
 
     Web::oEmbed::Response->new_from_response($res);
@@ -154,7 +154,9 @@ oEmbed provider endpoint and parse the response. The method returns an
 instance of Web::oEmbed::Response.
 
 Returns undef if there's no provider found for the URL. Throws an
-error if there's an error in JSON/XML parsing etc.
+error if there's an error in JSON/XML parsing etc. (Note: I don't like
+this interface because there's no cleaner way to handle and diagnose
+errors. This might be changed.)
 
 C<format> optional parameter specifies which C<format> is sent to the
 provider as a prefered format parameter. When omitted, the default
@@ -227,6 +229,16 @@ method is an alias to C<html> accessor if there is one in the response
 or C<rich> response.
 
 =back
+
+=head1 TODO
+
+Currently if you register 100 providers, the I<embed> method could
+potentially iterate through all of providers to run the regular
+expression, which doesn't sound good. I guess we could come up with
+some Trie-ish regexp solution that immediately returns the
+correspondent provider by compiling all regular expressions into one.
+
+Patches are welcome on this :)
 
 =head1 COPYRIGHT
 
