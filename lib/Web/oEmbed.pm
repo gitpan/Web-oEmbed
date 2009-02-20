@@ -2,9 +2,9 @@ package Web::oEmbed;
 
 use strict;
 use 5.8.1;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
-use Squirrel;
+use Any::Moose;
 has 'format'    => (is => 'rw', default => 'json');
 has 'discovery' => (is => 'rw');
 has 'providers' => (is => 'rw', isa => 'ArrayRef', default => sub { [] });
@@ -78,7 +78,7 @@ sub embed {
     my $url = $self->request_url($uri, $opt) or return;
     my $res = $self->agent->get($url);
 
-    Web::oEmbed::Response->new_from_response($res);
+    Web::oEmbed::Response->new_from_response($res, $uri);
 }
 
 1;
@@ -99,19 +99,21 @@ Web::oEmbed - oEmbed consumer
   my $consumer = Web::oEmbed->new({ format => 'json' });
   $consumer->register_provider({
       url  => 'http://*.flickr.com/*',
-      api  => 'http://www.flickr.com/services/oembed/,
+      api  => 'http://www.flickr.com/services/oembed/',
   });
 
   my $response = eval { $consumer->embed("http://www.flickr.com/photos/bulknews/2752124387/") };
   if ($response) {
-      $response->matched_uri; # 'http://www.flickr.com/photos/bulknews/2752124387/'
-      $response->type;        # 'photo'
-      $response->title;       # title of the photo
-      $response->url;         # JPEG URL
-      $response->width;       # JPEG width
-      $response->height;      # JPEG height
+      $response->matched_uri;   # 'http://www.flickr.com/photos/bulknews/2752124387/'
+      $response->type;          # 'photo'
+      $response->title;         # title of the photo
+      $response->url;           # JPEG URL
+      $response->width;         # JPEG width
+      $response->height;        # JPEG height
+      $response->provider_name; # Flickr
+      $response->provider_url;  # http://www.flickr.com/
 
-      print $response->render; # handy shortcut to generate <img/> tag
+      print $response->render;  # handy shortcut to generate <img/> tag
   }
 
 =head1 DESCRIPTION
